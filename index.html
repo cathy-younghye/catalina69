@@ -9,6 +9,11 @@
 <body>
   <header class="topbar">
     <h1>10코아 노트</h1>
+    <div class="sync">
+      <span id="syncStatus" data-state="off">로그인하면 폰·노트북이 연동됩니다</span>
+      <button type="button" id="loginBtn">Google 로그인</button>
+      <button type="button" id="logoutBtn" class="ghost" hidden>로그아웃</button>
+    </div>
     <div class="year">
       <label for="yearSelect">사업연도</label>
       <select id="yearSelect"></select>
@@ -83,5 +88,6 @@
 
   <script src="holidays.js"></script>
   <script src="app.js"></script>
+  <script type="module" src="cloud.js"></script>
 </body>
 </html>

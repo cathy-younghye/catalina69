@@ -52,16 +52,32 @@
   const byTime = (a, b) => (a.time || "99:99").localeCompare(b.time || "99:99");
   const doneCount = (n) => n.items.filter((i) => i.done).length;
 
+  // 빈 노트는 저장하지 않음 (화면에서 편집 중인 빈 칸은 메모리에만 유지)
+  const cleanNotes = () => Object.fromEntries(Object.entries(notes).filter(([, n]) => !isEmpty(n)));
+  // 비교·업로드용으로 노트 내용만 추림
+  const pick = (n) => ({ items: n.items, thanks: n.thanks || "", schedule: n.schedule || "", events: eventsOf(n) });
+
+  // 아직 클라우드에 올리지 않은 날짜
+  const dirty = new Set();
+
   let saveTimer;
   function persist() {
     try {
-      // 빈 노트는 저장하지 않음 (화면에서 편집 중인 빈 칸은 메모리에만 유지)
-      const clean = Object.fromEntries(Object.entries(notes).filter(([, n]) => !isEmpty(n)));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanNotes()));
       $("saveStatus").textContent = "자동 저장됨 · " + new Date().toLocaleTimeString("ko-KR");
     } catch {
       $("saveStatus").textContent = "저장 실패 — 백업 저장을 눌러 파일로 보관하세요";
     }
+    pushDirty();
+  }
+
+  // 로그인 상태면 바뀐 날짜만 클라우드(Firebase)로 전송
+  function pushDirty() {
+    const cloud = window.TenCoreCloud;
+    if (!cloud || !cloud.active || dirty.size === 0) return;
+    const changes = [...dirty].map((key) => ({ key, data: notes[key] && !isEmpty(notes[key]) ? pick(notes[key]) : null }));
+    dirty.clear();
+    cloud.push(changes);
   }
   function scheduleSave() {
     $("saveStatus").textContent = "저장 중…";
@@ -195,6 +211,7 @@
   });
 
   function afterEdit(key) {
+    dirty.add(key);
     updateProgress();
     renderCalendar();
     scheduleSave();
@@ -359,6 +376,7 @@
       if (typeof data !== "object" || Array.isArray(data)) throw new Error();
       if (!confirm("백업 파일의 내용을 현재 노트에 합칠까요? (같은 날짜는 백업 내용으로 바뀝니다)")) return;
       Object.assign(notes, data);
+      Object.keys(data).forEach((k) => dirty.add(k));
       persist();
       go(current);
       alert("백업을 불러왔습니다.");
@@ -368,6 +386,51 @@
       e.target.value = "";
     }
   });
+
+  // ---------- 클라우드 동기화 연결 (cloud.js에서 사용) ----------
+  const same = (a, b) => JSON.stringify(pick(a)) === JSON.stringify(pick(b));
+
+  function refreshAfterRemote(changedKeys) {
+    if (!changedKeys.length) return;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanNotes())); } catch {}
+    renderYearSelect();
+    renderCalendar();
+    if (changedKeys.includes(toKey(current))) renderNote();
+  }
+
+  window.TenCore = {
+    // 이 기기에 저장된 노트 전체 (첫 로그인 때 업로드용)
+    localNotes: () => Object.fromEntries(Object.entries(cleanNotes()).map(([k, n]) => [k, pick(n)])),
+
+    // 다른 기기에서 바뀐 내용 반영. data가 null이면 삭제
+    applyRemote(changes) {
+      const changed = [];
+      changes.forEach(({ key, data }) => {
+        if (dirty.has(key)) return; // 이 기기에서 아직 안 올린 수정이 우선
+        const local = notes[key];
+        if (!data) {
+          if (local && !isEmpty(local)) { delete notes[key]; changed.push(key); }
+          return;
+        }
+        if (local && same(local, data)) return;
+        notes[key] = { ...emptyNote(), ...data };
+        changed.push(key);
+      });
+      refreshAfterRemote(changed);
+    },
+
+    // 서버에 있는 전체 목록으로 맞춤 (서버에 없는 날짜는 이 기기에서도 지움)
+    replaceAll(remote) {
+      const changed = [];
+      Object.keys(notes).forEach((key) => {
+        if (!remote[key] && !dirty.has(key) && !isEmpty(notes[key])) { delete notes[key]; changed.push(key); }
+      });
+      this.applyRemote(Object.entries(remote).map(([key, data]) => ({ key, data })));
+      refreshAfterRemote(changed);
+    },
+
+    pushDirty,
+  };
 
   window.addEventListener("beforeunload", () => { clearTimeout(saveTimer); persist(); });
   window.addEventListener("resize", () => document.querySelectorAll("textarea").forEach(autosize));

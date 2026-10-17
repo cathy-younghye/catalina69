@@ -304,3 +304,19 @@ button.primary:hover { background: var(--strong-hover); }
   .event-form { grid-template-columns: 1fr 1fr; }
   .event-form input[type="text"] { grid-column: 1 / -1; grid-row: 1; }
 }
+
+/* ---------- 로그인·동기화 ---------- */
+.sync { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: 13px; }
+#syncStatus::before { content: "●"; margin-right: 5px; color: #f3d9c4; }
+#syncStatus[data-state="on"]::before { color: #b9f5c8; }
+#syncStatus[data-state="busy"]::before { color: #ffe08a; }
+#syncStatus[data-state="error"]::before { color: #ffd0c9; }
+.sync button { background: #fff; padding: 4px 10px; font-size: 13px; }
+.sync button.ghost { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .7); }
+.sync button.ghost:hover { background: rgba(255, 255, 255, .15); }
+.sync button[hidden] { display: none; }
+
+@media (max-width: 820px) {
+  .sync { order: 3; width: 100%; margin-left: 0; justify-content: space-between; }
+}
+@media print { .sync { display: none; } }
