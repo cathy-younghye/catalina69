@@ -33,7 +33,12 @@ const statusEl = $("syncStatus");
 const loginBtn = $("loginBtn");
 const logoutBtn = $("logoutBtn");
 
+// 권한 오류 등은 이후 오프라인 표시로 덮이지 않게 유지
+let blockingError = false;
+const permissionMsg = "접근 거부 — Firestore 규칙이 게시됐는지 확인하세요";
+
 function setStatus(text, state = "") {
+  if (blockingError && state !== "error") return;
   statusEl.textContent = text;
   statusEl.dataset.state = state;
 }
@@ -84,6 +89,7 @@ onAuthStateChanged(auth, async (user) => {
   if (unsubscribe) { unsubscribe(); unsubscribe = null; }
   window.TenCoreCloud.active = false;
   notesCol = null;
+  blockingError = false;
 
   if (!user) {
     loginBtn.hidden = false;
@@ -101,7 +107,8 @@ onAuthStateChanged(auth, async (user) => {
     await uploadLocalOnce(user.uid);
   } catch (err) {
     console.error(err);
-    setStatus("기존 기록 업로드 실패 — 새로고침 후 다시 시도하세요", "error");
+    setStatus(err.code === "permission-denied" ? permissionMsg : "기존 기록 업로드 실패 — 새로고침 후 다시 시도하세요", "error");
+    blockingError = true;
   }
 
   window.TenCoreCloud.active = true;
@@ -126,7 +133,8 @@ onAuthStateChanged(auth, async (user) => {
       snap.metadata.fromCache ? "busy" : "on");
   }, (err) => {
     console.error(err);
-    setStatus("동기화 오류 — 데이터베이스 규칙을 확인하세요", "error");
+    setStatus(err.code === "permission-denied" ? permissionMsg : "동기화 오류 — " + err.code, "error");
+    blockingError = true;
   });
 });
 
