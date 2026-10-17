@@ -115,7 +115,8 @@ onAuthStateChanged(auth, async (user) => {
   window.TenCore.pushDirty(); // 로그인 전에 쓴 내용 전송
 
   let synced = false;
-  unsubscribe = onSnapshot(notesCol, (snap) => {
+  // includeMetadataChanges: 내용이 같아도 '서버 연결됨' 상태 변화를 받기 위함
+  unsubscribe = onSnapshot(notesCol, { includeMetadataChanges: true }, (snap) => {
     if (!synced && !snap.metadata.fromCache) {
       // 서버와 처음 연결됐을 때 전체를 서버 기준으로 맞춤
       synced = true;
