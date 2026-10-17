@@ -1,12 +1,18 @@
+/* 색 체계: 따뜻한 회색 바탕 · 흰 패널 · 크림색 칸 · 진녹색 포인트 */
 :root {
-  --bg: #c8c8c8;
-  --panel: #dcdcdc;
-  --cell: #e9e9e9;
-  --input: #f2f2f2;
-  --line: #9e9e9e;
-  --strong: #555555;
-  --text: #000000;
-  --muted: #333333;
+  --bg: #e2dfd8;
+  --panel: #fbfaf7;
+  --cell: #f4f0e6;
+  --input: #ffffff;
+  --line: #d8d1c2;
+  --strong: #2f5d46;
+  --strong-hover: #3b7258;
+  --accent-soft: #e4eee7;
+  --accent-mid: #b9d3c2;
+  --text: #1a1a1a;
+  --muted: #5e5a52;
+  --red: #c0392b;
+  --blue: #2862b8;
 }
 
 * { box-sizing: border-box; }
@@ -29,7 +35,7 @@ button, .file-btn {
   padding: 6px 12px;
   cursor: pointer;
 }
-button:hover, .file-btn:hover { background: var(--input); }
+button:hover, .file-btn:hover { background: var(--input); border-color: var(--strong); }
 button.ghost { background: transparent; }
 
 .topbar {
@@ -39,7 +45,8 @@ button.ghost { background: transparent; }
   flex-wrap: wrap;
   gap: 12px;
   padding: 16px 24px;
-  border-bottom: 2px solid var(--strong);
+  background: var(--strong);
+  color: #fff;
 }
 .topbar h1 { margin: 0; font-size: 22px; font-weight: 700; }
 .year { display: flex; align-items: center; gap: 8px; }
@@ -65,10 +72,11 @@ main {
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 16px;
+  box-shadow: 0 1px 3px rgba(60, 50, 30, .08);
 }
 
 /* 달력 */
-.calendar-panel { position: sticky; top: 16px; background: #2f6b3a; border-color: #24552d; }
+.calendar-panel { position: sticky; top: 16px; }
 .months {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -76,6 +84,7 @@ main {
   margin-bottom: 12px;
 }
 .months button { padding: 4px 0; font-size: 13px; }
+.months button { background: var(--cell); border-color: var(--line); }
 .months button.active { background: var(--strong); color: #fff; border-color: var(--strong); }
 
 .weekdays, .days {
@@ -84,9 +93,7 @@ main {
   gap: 3px;
   text-align: center;
 }
-.weekdays span { font-size: 12px; font-weight: 700; padding-bottom: 4px; color: #fff; }
-.weekdays span.red { color: #ffb3b3; }
-.weekdays span.blue { color: #bcd0ff; }
+.weekdays span { font-size: 12px; font-weight: 700; padding-bottom: 4px; color: var(--muted); }
 .days button {
   position: relative;
   aspect-ratio: 1;
@@ -100,23 +107,19 @@ main {
   line-height: 1.1;
 }
 .days button small { font-size: 9px; color: var(--muted); }
-.days button { background: #f3e8d2; border-color: #c9b48c; }
-.days button:hover { background: #faf3e6; }
-.days button.has-note { background: #e0c999; }
-.days button.full { background: #8a6d3b; color: #fff; }
-.days button.full small { color: #fff; }
+.days button { background: var(--cell); border-color: var(--line); }
+.days button:hover { background: var(--input); }
+.days button.has-note { background: var(--accent-soft); border-color: var(--accent-mid); }
+.days button.full { background: var(--accent-mid); border-color: var(--strong); }
+.days button.full small { color: var(--strong); font-weight: 700; }
 /* 토요일 파란색 · 일요일/공휴일 빨간색 */
-.red, .days button.red { color: #d00000; }
-.blue, .days button.blue { color: #0040d0; }
-.days button.red small { color: #d00000; }
-.days button.blue small { color: #0040d0; }
-.days button.full.red, .days button.full.red small { color: #ffd6d6; }
-.days button.full.blue, .days button.full.blue small { color: #d6e2ff; }
-.days button.today { outline: 2px solid var(--text); outline-offset: -2px; }
-.days button.selected { background: var(--text); color: #fff; border-color: var(--text); }
+.red, .days button.red, .weekdays span.red { color: var(--red); }
+.blue, .days button.blue, .weekdays span.blue { color: var(--blue); }
+.days button.today { outline: 2px solid var(--strong); outline-offset: -2px; font-weight: 700; }
+.days button.selected { background: var(--strong); color: #fff; border-color: var(--strong); }
 .days button.selected small { color: #fff; }
-.days button.selected.red, .days button.selected.red small { color: #ff8a8a; }
-.days button.selected.blue, .days button.selected.blue small { color: #9db8ff; }
+.days button.selected.red, .days button.selected.red small { color: #ffd0c9; }
+.days button.selected.blue, .days button.selected.blue small { color: #d3e2ff; }
 
 /* 노트 */
 .date-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -135,7 +138,7 @@ main {
 .progress-fill { height: 100%; width: 0; background: var(--strong); transition: width .2s; }
 #progressText { font-weight: 700; min-width: 56px; text-align: right; }
 
-.core-table { border: 1px solid var(--strong); border-radius: 8px; overflow: hidden; }
+.core-table { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .core-row {
   display: grid;
   grid-template-columns: 44px 140px 1fr;
@@ -146,6 +149,8 @@ main {
 .core-row .num {
   display: flex; align-items: center; justify-content: center;
   font-weight: 700;
+  color: var(--strong);
+  background: var(--accent-soft);
   border-right: 1px solid var(--line);
 }
 .core-row .name {
@@ -155,9 +160,10 @@ main {
   border-right: 1px solid var(--line);
   cursor: pointer;
 }
-.core-row .name input { width: 17px; height: 17px; accent-color: #000; cursor: pointer; }
+.core-row .name input { width: 17px; height: 17px; accent-color: var(--strong); cursor: pointer; }
 .core-row textarea { border: none; border-radius: 0; }
-.core-row.done { background: #d0d0d0; }
+.core-row.done { background: var(--accent-soft); }
+.core-row.done .num { background: var(--strong); color: #fff; }
 
 textarea {
   width: 100%;
@@ -169,8 +175,8 @@ textarea {
   border-radius: 6px;
   padding: 8px 10px;
 }
-textarea:focus, select:focus, input:focus, button:focus-visible { outline: 2px solid var(--text); outline-offset: -2px; }
-textarea::placeholder { color: #6b6b6b; }
+textarea:focus, select:focus, input:focus, button:focus-visible { outline: 2px solid var(--strong); outline-offset: -2px; }
+textarea::placeholder { color: #9a9488; }
 
 .final-cell {
   display: grid;
@@ -179,7 +185,7 @@ textarea::placeholder { color: #6b6b6b; }
   margin-top: 14px;
   padding: 12px;
   background: var(--cell);
-  border: 1px solid var(--strong);
+  border: 1px solid var(--line);
   border-radius: 8px;
 }
 .final-col label { display: block; font-weight: 700; margin-bottom: 6px; }
@@ -219,14 +225,14 @@ textarea::placeholder { color: #6b6b6b; }
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #2f6b3a;
+  background: var(--strong);
 }
-.days button.selected.has-event::after, .days button.full.has-event::after { background: #b9e0b3; }
+.days button.selected.has-event::after { background: #fff; }
 
-.month-events { margin-top: 14px; color: #fff; }
+.month-events { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
 .month-events h2 { font-size: 14px; margin: 0 0 6px; }
 .month-events ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-.month-events li.empty { font-size: 12px; color: #d8ecd9; }
+.month-events li.empty { font-size: 12px; color: var(--muted); }
 .month-events button {
   width: 100%;
   display: grid;
@@ -236,10 +242,11 @@ textarea::placeholder { color: #6b6b6b; }
   text-align: left;
   font-size: 13px;
   padding: 5px 8px;
-  background: #f3e8d2;
-  border-color: #c9b48c;
+  background: var(--cell);
+  border-color: var(--line);
+  border-left: 3px solid var(--strong);
 }
-.month-events button:hover { background: #faf3e6; }
+.month-events button:hover { background: var(--accent-soft); }
 .me-date { font-weight: 700; white-space: nowrap; }
 .me-time { color: var(--muted); white-space: nowrap; }
 .me-text { overflow-wrap: anywhere; }
@@ -248,7 +255,7 @@ textarea::placeholder { color: #6b6b6b; }
   margin-bottom: 14px;
   padding: 12px;
   background: var(--cell);
-  border: 1px solid var(--strong);
+  border: 1px solid var(--line);
   border-radius: 8px;
 }
 .events-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -278,8 +285,8 @@ textarea::placeholder { color: #6b6b6b; }
   gap: 6px;
   margin-bottom: 8px;
   padding: 8px;
-  background: #f3e8d2;
-  border: 1px solid #c9b48c;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-mid);
   border-radius: 6px;
 }
 .event-form[hidden] { display: none; }
@@ -290,8 +297,8 @@ textarea::placeholder { color: #6b6b6b; }
   padding: 6px 8px;
   min-width: 0;
 }
-button.primary { background: #2f6b3a; border-color: #24552d; color: #fff; font-weight: 700; }
-button.primary:hover { background: #3a7f47; }
+button.primary { background: var(--strong); border-color: var(--strong); color: #fff; font-weight: 700; }
+button.primary:hover { background: var(--strong-hover); }
 
 @media (max-width: 520px) {
   .event-form { grid-template-columns: 1fr 1fr; }
