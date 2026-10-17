@@ -4,7 +4,20 @@
     "운동", "책 읽기", "음원듣기", "미팅 참석", "제품 애용",
     "소비자관리", "사업설명", "상담", "신뢰 쌓기", "E-Com",
   ];
-  const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
+  // 각 항목 입력칸에 흐리게 보이는 안내 문구 (CORES 순서와 같음)
+  const HINTS = [
+    "매일 30분 이상 운동 — 사업을 지속할 수 있는 건강 관리",
+    "매일 30분씩",
+    "매일 1개 이상",
+    "오픈 미팅(OM), 세미나, 랠리 등 공식 행사에 빠짐없이 참석",
+    "100% 제품 애용 — 암웨이 전 제품을 직접 써보고 애용하기",
+    "꾸준히 제품을 사용하는 고정 소비자 30명 만들기",
+    "STP(Show The Plan) 주 3회 이상",
+    "업라인 스폰서와 매일 상담",
+    "약속 준수, 금전 거래 주의, 높은 도덕성 유지",
+    "온라인 시스템 및 단체 커뮤니케이션 적극 활용",
+  ];
+  const WEEKDAYS =["일", "월", "화", "수", "목", "금", "토"];
 
   const $ = (id) => document.getElementById(id);
 
@@ -76,7 +89,7 @@
     row.innerHTML = `
       <div class="num">${i + 1}</div>
       <label class="name"><input type="checkbox" data-i="${i}"> ${name}</label>
-      <textarea data-i="${i}" rows="2" placeholder="${name} — 구체적인 내용을 적어보세요"></textarea>`;
+      <textarea data-i="${i}" rows="2" placeholder="${HINTS[i]}"></textarea>`;
     table.appendChild(row);
   });
 
