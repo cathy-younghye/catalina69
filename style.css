@@ -256,7 +256,7 @@ textarea::placeholder { color: #6b6b6b; }
 .events .empty { margin: 0; font-size: 13px; color: var(--muted); }
 #eventList { display: grid; gap: 6px; }
 .event-row { display: grid; grid-template-columns: 150px 1fr auto; gap: 6px; }
-.event-row input {
+.event-row input, .event-row select {
   background: var(--input);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -268,7 +268,7 @@ textarea::placeholder { color: #6b6b6b; }
 @media print {
   .events-head button, .event-row button { display: none; }
   .events { background: #fff; }
-  .event-row input { background: #fff; }
+  .event-row input, .event-row select { background: #fff; }
 }
 
 /* 일정 입력 폼 */
@@ -283,7 +283,7 @@ textarea::placeholder { color: #6b6b6b; }
   border-radius: 6px;
 }
 .event-form[hidden] { display: none; }
-.event-form input {
+.event-form input, .event-form select {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 6px;

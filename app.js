@@ -103,6 +103,20 @@
   // ---------- 날짜별 일정 ----------
   const eventList = $("eventList");
 
+  // 시간 선택: 15분 단위 (00:00 ~ 23:45)
+  const TIME_SLOTS = [];
+  for (let h = 0; h < 24; h++) for (let m = 0; m < 60; m += 15) TIME_SLOTS.push(`${pad(h)}:${pad(m)}`);
+  const timeLabel = (t) => {
+    const [h, m] = t.split(":").map(Number);
+    return `${h < 12 ? "오전" : "오후"} ${h % 12 || 12}:${pad(m)}`;
+  };
+  const timeOptions = (selected = "") => {
+    const slots = selected && !TIME_SLOTS.includes(selected) ? [...TIME_SLOTS, selected].sort() : TIME_SLOTS;
+    return `<option value="">시간 없음</option>` +
+      slots.map((t) => `<option value="${t}"${t === selected ? " selected" : ""}>${timeLabel(t)}</option>`).join("");
+  };
+  $("evTime").innerHTML = timeOptions();
+
   function renderEvents() {
     const note = notes[toKey(current)];
     const events = note && note.events ? note.events : [];
@@ -110,7 +124,7 @@
     eventList.innerHTML = events.length
       ? events.map((ev, i) => `
         <div class="event-row">
-          <input type="time" data-ei="${i}" data-f="time" value="${esc(ev.time)}" aria-label="시간">
+          <select data-ei="${i}" data-f="time" aria-label="시간">${timeOptions(ev.time)}</select>
           <input type="text" data-ei="${i}" data-f="text" value="${esc(ev.text)}" placeholder="일정 내용 (예: 김OO님 상담, 세미나)">
           <button type="button" class="ghost" data-del="${i}" aria-label="일정 삭제">✕</button>
         </div>`).join("")
