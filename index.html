@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10코아 노트</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>10코아 노트</h1>
+    <div class="year">
+      <label for="yearSelect">사업연도</label>
+      <select id="yearSelect"></select>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel calendar-panel">
+      <div class="months" id="months"></div>
+      <div class="weekdays">
+        <span class="red">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span class="blue">토</span>
+      </div>
+      <div class="days" id="days"></div>
+      <div class="month-events">
+        <h2 id="monthEventsTitle">일정</h2>
+        <ul id="monthEvents"></ul>
+      </div>
+    </section>
+
+    <section class="panel note-panel">
+      <div class="date-nav">
+        <button type="button" id="prevDay" aria-label="이전 날">◀</button>
+        <div class="date-box">
+          <div class="date-title" id="dateTitle"></div>
+          <input type="date" id="datePicker" aria-label="날짜 선택">
+        </div>
+        <button type="button" id="nextDay" aria-label="다음 날">▶</button>
+        <button type="button" id="todayBtn" class="ghost">오늘</button>
+      </div>
+
+      <div class="progress">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <span id="progressText">0 / 10</span>
+      </div>
+
+      <div class="events">
+        <div class="events-head">
+          <h2>일정</h2>
+          <button type="button" id="addEvent">+ 일정 추가</button>
+        </div>
+        <div id="eventList"></div>
+      </div>
+
+      <div class="core-table" id="coreTable"></div>
+
+      <div class="final-cell">
+        <div class="final-col">
+          <label for="thanks">감사일기</label>
+          <textarea id="thanks" rows="5" placeholder="오늘 감사했던 일을 적어보세요"></textarea>
+        </div>
+        <div class="final-col">
+          <label for="schedule">다음날 스케쥴</label>
+          <textarea id="schedule" rows="5" placeholder="내일 할 일과 약속을 적어보세요"></textarea>
+        </div>
+      </div>
+
+      <div class="status" id="saveStatus">자동 저장됨</div>
+    </section>
+  </main>
+
+  <footer class="tools">
+    <button type="button" id="printBtn">인쇄</button>
+    <button type="button" id="exportBtn">백업 저장 (JSON)</button>
+    <label class="file-btn">백업 불러오기<input type="file" id="importFile" accept="application/json,.json" hidden></label>
+  </footer>
+
+  <script src="holidays.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
