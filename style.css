@@ -1,18 +1,18 @@
-/* 색 체계: 따뜻한 회색 바탕 · 흰 패널 · 크림색 칸 · 진녹색 포인트 */
+/* 색 체계: 따뜻한 스톤 그레이 바탕 · 흰 패널 · 아이보리 칸 · 오렌지 포인트 */
 :root {
-  --bg: #e2dfd8;
-  --panel: #fbfaf7;
-  --cell: #f4f0e6;
+  --bg: #e6e1da;
+  --panel: #fffdfa;
+  --cell: #faf4ec;
   --input: #ffffff;
-  --line: #d8d1c2;
-  --strong: #2f5d46;
-  --strong-hover: #3b7258;
-  --accent-soft: #e4eee7;
-  --accent-mid: #b9d3c2;
-  --text: #1a1a1a;
-  --muted: #5e5a52;
-  --red: #c0392b;
-  --blue: #2862b8;
+  --line: #e2d5c5;
+  --strong: #c95a17;
+  --strong-hover: #db6a24;
+  --accent-soft: #fdeee2;
+  --accent-mid: #f5c7a3;
+  --text: #1f1a17;
+  --muted: #6b5f55;
+  --red: #b3261e;
+  --blue: #2f5fa8;
 }
 
 * { box-sizing: border-box; }
