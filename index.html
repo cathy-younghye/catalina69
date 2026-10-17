@@ -49,6 +49,12 @@
           <h2>일정</h2>
           <button type="button" id="addEvent">+ 일정 추가</button>
         </div>
+        <form id="eventForm" class="event-form" hidden>
+          <input type="time" id="evTime" aria-label="시간">
+          <input type="text" id="evText" placeholder="일정 내용 (예: 김OO님 상담, 세미나)" aria-label="일정 내용">
+          <button type="submit" class="primary">확인</button>
+          <button type="button" id="evCancel" class="ghost">취소</button>
+        </form>
         <div id="eventList"></div>
       </div>
 

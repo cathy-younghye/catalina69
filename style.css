@@ -270,3 +270,30 @@ textarea::placeholder { color: #6b6b6b; }
   .events { background: #fff; }
   .event-row input { background: #fff; }
 }
+
+/* 일정 입력 폼 */
+.event-form {
+  display: grid;
+  grid-template-columns: 150px 1fr auto auto;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 8px;
+  background: #f3e8d2;
+  border: 1px solid #c9b48c;
+  border-radius: 6px;
+}
+.event-form[hidden] { display: none; }
+.event-form input {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 8px;
+  min-width: 0;
+}
+button.primary { background: #2f6b3a; border-color: #24552d; color: #fff; font-weight: 700; }
+button.primary:hover { background: #3a7f47; }
+
+@media (max-width: 520px) {
+  .event-form { grid-template-columns: 1fr 1fr; }
+  .event-form input[type="text"] { grid-column: 1 / -1; grid-row: 1; }
+}

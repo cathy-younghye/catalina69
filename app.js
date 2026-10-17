@@ -117,13 +117,32 @@
       : '<p class="empty">등록된 일정이 없습니다.</p>';
   }
 
+  // 일정 추가: 입력 후 [확인]을 눌러야 추가됨
+  const eventForm = $("eventForm");
+
+  function closeEventForm() {
+    eventForm.reset();
+    eventForm.hidden = true;
+    $("addEvent").hidden = false;
+  }
+
   $("addEvent").addEventListener("click", () => {
+    eventForm.hidden = false;
+    $("addEvent").hidden = true;
+    $("evText").focus();
+  });
+
+  $("evCancel").addEventListener("click", closeEventForm);
+
+  eventForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = $("evText").value.trim();
+    if (!text) { $("evText").focus(); return; }
     const key = toKey(current);
-    ensureNote(key).events.push({ time: "", text: "" });
+    ensureNote(key).events.push({ time: $("evTime").value, text });
+    closeEventForm();
     renderEvents();
-    const inputs = eventList.querySelectorAll('input[data-f="text"]');
-    // 빈 시간은 맨 뒤로 정렬되므로 마지막 칸에 포커스
-    inputs[inputs.length - 1].focus();
+    afterEdit(key);
   });
 
   eventList.addEventListener("input", (e) => {
@@ -173,6 +192,7 @@
       row.querySelector("input").checked = note.items[i].done;
       row.querySelector("textarea").value = note.items[i].text;
     });
+    closeEventForm();
     renderEvents();
     $("thanks").value = note.thanks;
     $("schedule").value = note.schedule;
