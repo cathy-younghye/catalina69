@@ -18,8 +18,6 @@ const firebaseConfig = {
   messagingSenderId: "1040402473785",
   appId: "1:1040402473785:web:fa6efc1e313db207fc7ee8",
 };
-// Firebase 호스팅 주소에서 열면 같은 주소로 로그인 처리 (아이폰 사파리 로그인 문제 방지)
-if (/\.(web\.app|firebaseapp\.com)$/.test(location.hostname)) firebaseConfig.authDomain = location.hostname;
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
