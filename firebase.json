@@ -8,7 +8,10 @@
       "**/.*/**",
       ".git/**",
       ".firebase/**",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "README.md",
+      "CLAUDE.md",
+      "**/*.md"
     ],
     "headers": [
       {
